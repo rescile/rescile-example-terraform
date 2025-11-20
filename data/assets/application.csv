@@ -1,0 +1,4 @@
+name,owner_team,os_image
+api-gateway,team-alpha,ubuntu-22.04-lts
+user-service,team-alpha,ubuntu-22.04-lts
+billing-service,team-beta,rhel-8.7

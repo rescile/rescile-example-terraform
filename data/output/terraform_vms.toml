@@ -1,0 +1,28 @@
+origin_resource = "server"
+
+[[output]]
+# The type of the new resource to create in the graph.
+resource_type = "terraform_vm_config"
+# The name for the new resource, derived from the server's hostname.
+name = "{{ origin_resource.hostname }}"
+
+# Only generate this output for servers in the 'prod' environment.
+match_on = [
+    { property = "environment", value = "prod" }
+]
+
+# This template renders a complete JSON object. The keys and values of this
+# object will become the properties of the new 'terraform_vm_config' resource.
+template = """
+{
+    "hostname": "{{ origin_resource.hostname }}",
+    "instance_type": "{{ origin_resource.instance_type }}",
+    "region": "{{ origin_resource.region }}",
+    "os_image": "{{ origin_resource.os_image }}",
+    "tags": {
+        "Owner": "{{ origin_resource.owner }}",
+        "Environment": "{{ origin_resource.environment }}",
+        "ManagedBy": "rescile"
+    }
+}
+"""

@@ -1,0 +1,4 @@
+subscription,application,environment,region,instance_size
+api-gateway-prod-eu,api-gateway,prod,westeurope,small
+user-service-prod-eu,user-service,prod,westeurope,medium
+billing-service-dev-us,billing-service,dev,eastus,small

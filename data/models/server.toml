@@ -1,0 +1,40 @@
+origin_resource = "subscription"
+
+# This map provides data for the template to look up instance SKUs.
+instance_types = { "prod" = { small = "Standard_B2s", medium = "Standard_B4ms" }, "dev"  = { small = "Standard_B1s", medium = "Standard_B2s" } }
+
+[[create_resource]]
+resource_type = "server"
+relation_type = "IS_INSTANCE_OF"
+name = "{{ origin_resource.subscription }}_server"
+[create_resource.properties]
+hostname      = "{{ origin_resource.subscription }}"
+environment   = "{{ origin_resource.environment }}"
+region        = "{{ origin_resource.region }}"
+instance_type = "{{ instance_types[origin_resource.environment][origin_resource.instance_size] }}"
+
+# The 'server' resource needs properties from the 'application' resource, but they are not directly
+# connected. The path is: (application) <--> (subscription) <--> (server).
+# We must propagate the properties along this path in two steps using `subscribe_property`.
+# Step 1: Propagate properties from 'application' to 'subscription'.
+# `target_resource_type` is omitted, so it defaults to "subscription" (the origin_resource of this file).
+[[subscribe_property]]
+origin_resource_type = "application"
+origin_property      = "os_image"
+target_property      = "os_image"
+
+[[subscribe_property]]
+origin_resource_type = "application"
+origin_property      = "owner_team"
+target_property      = "owner_team"
+
+# Step 2: Propagate the newly acquired properties from 'subscription' to the new 'server' resource.
+[[subscribe_property]]
+origin_property      = "os_image"
+target_resource_type = "server"
+target_property      = "os_image"
+
+[[subscribe_property]]
+origin_property      = "owner_team"
+target_resource_type = "server"
+target_property      = "owner" # Rename property to match output template

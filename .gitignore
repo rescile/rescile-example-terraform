@@ -1,0 +1,11 @@
+# direnv
+.direnv
+/direnv
+/direnv.test
+
+# rescile
+.bin/
+
+# terraform
+.terraform.lock.hcl
+.terraform/
