@@ -135,7 +135,7 @@ origin_resource = "server"
 # The type of the new resource to create in the graph.
 resource_type = "terraform_vm_config"
 # The name for the new resource, derived from the server's hostname.
-name = "{{ origin_resource.hostname }}"
+name = "{{ origin_resource.hostname | replace(from='-', to='_') }}"
 
 # Only generate this output for servers in the 'prod' environment.
 match_on = [

@@ -29,5 +29,5 @@ copy_properties = [ "os_image", "owner_team" ]
 to = "server"
 properties = [
   "os_image",
-  { from = "owner_team", as = "owner" } # Rename property to match output template
+  { from = "owner_team", as = "owner" } # Rename property to owner
 ]
