@@ -174,10 +174,12 @@ This query retrieves all `terraform_vm_config` resources. Because the output tem
 ```graphql
 query GetTerraformVmConfigs {
   terraform_vm_config {
+    instance_type
+    hostname
+    region
     name
-    api_gateway_prod_eu
-    user_service_prod_eu
-  }
+    os_image
+  } 
 }
 ```
 
@@ -188,29 +190,18 @@ Running this query against the `rescile-ce` server will produce a list of VM con
   "data": {
     "terraform_vm_config": [
       {
-        "name": "terraform_vm_config",
-        "api_gateway_prod_eu": {
-          "hostname": "api-gateway-prod-eu",
-          "instance_type": "Standard_B2s",
-          "os_image": "ubuntu-22.04-lts",
-          "region": "westeurope",
-          "tags": {
-            "Environment": "prod",
-            "ManagedBy": "rescile",
-            "Owner": "team-alpha"
-          }
-        },
-        "user_service_prod_eu": {
-          "hostname": "user-service-prod-eu",
-          "instance_type": "Standard_B4ms",
-          "os_image": "ubuntu-22.04-lts",
-          "region": "westeurope",
-          "tags": {
-            "Environment": "prod",
-            "ManagedBy": "rescile",
-            "Owner": "team-alpha"
-          }
-        }
+        "instance_type": "Standard_B2s",
+        "hostname": "api-gateway-prod-eu",
+        "region": "westeurope",
+        "name": "api_gateway_prod_eu",
+        "os_image": "ubuntu-22.04-lts"
+      },
+      {
+        "instance_type": "Standard_B4ms",
+        "hostname": "user-service-prod-eu",
+        "region": "westeurope",
+        "name": "user_service_prod_eu",
+        "os_image": "ubuntu-22.04-lts"
       }
     ]
   }
