@@ -179,7 +179,12 @@ query GetTerraformVmConfigs {
     region
     name
     os_image
-  } 
+    tags {
+      Environment
+      Owner
+      ManagedBy
+    }
+  }
 }
 ```
 
@@ -194,14 +199,24 @@ Running this query against the `rescile-ce` server will produce a list of VM con
         "hostname": "api-gateway-prod-eu",
         "region": "westeurope",
         "name": "api_gateway_prod_eu",
-        "os_image": "ubuntu-22.04-lts"
+        "os_image": "ubuntu-22.04-lts",
+        "tags": {
+          "Environment": "prod",
+          "Owner": "team-alpha",
+          "ManagedBy": "rescile"
+        }
       },
       {
         "instance_type": "Standard_B4ms",
         "hostname": "user-service-prod-eu",
         "region": "westeurope",
         "name": "user_service_prod_eu",
-        "os_image": "ubuntu-22.04-lts"
+        "os_image": "ubuntu-22.04-lts",
+        "tags": {
+          "Environment": "prod",
+          "Owner": "team-alpha",
+          "ManagedBy": "rescile"
+        }
       }
     ]
   }
@@ -216,10 +231,12 @@ Terraform works best with a map of objects for iteration. We can use a simple `c
 #!/bin/bash
 
 # The GraphQL query as a single-line JSON string
-GQL_QUERY='{"query": "query GetTerraformVmConfigs { terraform_vm_config { name api_gateway_prod_eu user_service_prod_eu } }"}'
+GQL_QUERY='{"query": "query GetTerraformVmConfigs { terraform_vm_config { instance_type hostname region name os_image tags { Environment Owner ManagedBy } } }"}'
 
 # The jq filter to transform the array into a map of maps
-JQ_FILTER='{ "virtual_machines": (.data.terraform_vm_config[0] | del(.name) | values | map({(.hostname): .}) | add) }'
+# We iterate over the entire array, create a new object for each item using its hostname as the key,
+# and then use 'add' to merge the resulting array of objects into a single object.
+JQ_FILTER='{ "virtual_machines": (.data.terraform_vm_config | map({(.hostname): .}) | add) }'
 
 # Execute, transform, and save
 curl -s -X POST -H "Content-Type: application/json" \
